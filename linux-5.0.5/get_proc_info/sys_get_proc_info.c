@@ -24,7 +24,8 @@ struct procinfos { // info about processes we need
 	struct proc_info oldest_child_proc; // oldest child process
 };
 
-asmlinkage long sys_get_proc_info(pid_t pid, struct procinfos * info) {
+//asmlinkage long sys_get_proc_info(pid_t pid, struct procinfos * info) {
+SYSCALL_DEFINE2(get_proc_info, pid_t, pid, struct procinfos *, info) {
 	struct task_struct *task_list;
 	struct list_head *p;
 
@@ -62,14 +63,3 @@ asmlinkage long sys_get_proc_info(pid_t pid, struct procinfos * info) {
 	return -EINVAL;
 }
 
-int init_module(void) {
-	long sys_return_value;
-	struct procinfos info;
-	sys_return_value = sys_get_proc_info(-1, &info);
-	printk("My student ID: %lu\n", info.studentID);
-	return 0;
-}
-
-void cleanup_module(void) {
-	printk(KERN_INFO "Kernel module exits\n");
-}
